@@ -35,7 +35,7 @@ namespace Snake
         {
             int r = Rows / 2;
 
-            for (int c = 1; c < 3; c++)
+            for (int c = 1; c <= 3; c++)
             {
                 Grid[r, c] = GridValue.Snake;
                 snakePositions.AddFirst(new Position(r, c));

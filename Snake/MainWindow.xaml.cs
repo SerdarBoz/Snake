@@ -33,6 +33,7 @@ namespace Snake
             {Direction.Left, 270 }
         };
 
+        //Change gridsize here. Rows and cols have to be equal!
         private readonly int rows = 15, cols = 15;
         private readonly Image[,] gridImages;
         private GameState gameState;
@@ -97,7 +98,8 @@ namespace Snake
         {
             while (!gameState.GameOver)
             {
-                await Task.Delay(100);
+                //Choose the snake speed. Lower is faster
+                await Task.Delay(125);
                 gameState.Move();
                 Draw();
             }
@@ -108,6 +110,7 @@ namespace Snake
             Image[,] images = new Image[rows, cols];
             GameGrid.Rows = rows;
             GameGrid.Columns = cols;
+            GameGrid.Width = GameGrid.Height * (cols / (double)rows);
 
             for (int r = 0; r < rows; r++)
             {
@@ -156,6 +159,18 @@ namespace Snake
             image.RenderTransform = new RotateTransform(rotation); 
         }
 
+        private async Task DrawDeadSnake()
+        {
+            List<Position> positions = new List<Position>(gameState.SnakePositions());
+            for (int i = 0; i< positions.Count; i++)
+            {
+            Position pos = positions[i];
+                ImageSource source = (i == 0) ? Images.DeadHead : Images.DeadBody;
+                gridImages[pos.Row, pos.Col].Source = source;
+                await Task.Delay(50);
+            }
+        }
+
         private async Task ShowCountDown()
         {
             for(int i = 3; i>= 1; i--)
@@ -167,6 +182,7 @@ namespace Snake
 
         private async Task ShowGameOver()
         {
+            await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
             OverlayText.Text = "PRESS ANY KEY TO START";
