@@ -99,7 +99,7 @@ namespace Snake
             while (!gameState.GameOver)
             {
                 //Choose the snake speed. Lower is faster
-                await Task.Delay(125);
+                await Task.Delay(115);
                 gameState.Move();
                 Draw();
             }
